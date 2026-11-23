@@ -111,6 +111,34 @@
         }
     });
 
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navLinks = document.querySelector(".nav-links");
+    const closeMenu = () => {
+        if (!menuToggle || !navLinks) return;
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "Open navigation menu");
+        menuToggle.textContent = "☰";
+        navLinks.classList.remove("is-open");
+    };
+
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener("click", () => {
+            const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+            menuToggle.setAttribute("aria-expanded", String(!isOpen));
+            menuToggle.setAttribute("aria-label", isOpen ? "Open navigation menu" : "Close navigation menu");
+            menuToggle.textContent = isOpen ? "☰" : "×";
+            navLinks.classList.toggle("is-open", !isOpen);
+        });
+
+        navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") closeMenu();
+        });
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 800) closeMenu();
+        });
+    }
+
     const productSearch = document.querySelector("#product-search");
     const productCards = [...document.querySelectorAll("[data-product-card]")];
     if (productSearch && productCards.length) {
